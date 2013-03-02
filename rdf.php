@@ -43,7 +43,7 @@ while($row = mysql_fetch_assoc($res))
 {
 ?>
   <rdf:Description rdf:about="<?php echo $base.$row['uri'] ?>">
-    <rdfs:label><?php echo $row['name'] ?></rdfs:label>
+    <rdfs:label><?php echo htmlentities($row['name']) ?></rdfs:label>
     <oo:mapIcon rdf:resource="<?php echo $row['icon'] ?>" />
     <geo:lat rdf:datatype="http://www.w3.org/2001/XMLSchema#float"><?php echo $row['lat'] ?></geo:lat>
     <geo:long rdf:datatype="http://www.w3.org/2001/XMLSchema#float"><?php echo $row['lon'] ?></geo:long>

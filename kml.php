@@ -37,7 +37,7 @@ while($row = mysql_fetch_assoc($res))
 {
 ?>
     <Placemark>
-      <name><?php echo $row['name'] ?></name>
+      <name><?php echo htmlspecialchars($row['name']) ?></name>
       <Style>
         <IconStyle>
           <Icon>
