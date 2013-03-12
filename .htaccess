@@ -1,6 +1,7 @@
 RewriteEngine on
 
 RewriteRule ^register$ register.php
+RewriteRule ^reset$ reset.php
 RewriteRule ^login$ login.php
 RewriteRule ^logout$ logout.php
 RewriteRule ^new$ new.php
