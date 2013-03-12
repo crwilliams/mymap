@@ -48,7 +48,8 @@ if($error != "")
 		<tr><td /><td><input type='submit' /></td></tr>
 	</table>
 </form>
-<a href='register'>Register for an account</a>
+<a href='register'>Register for an account</a> | 
+<a href='reset'>Reset your account password</a>
 <?
 outputFooter();
 ?>

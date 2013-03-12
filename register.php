@@ -1,7 +1,14 @@
 <?
 error_reporting(0);
 include 'functions.inc.php';
-outputHeader("Register an account", "", "GENERIC");
+if(isset($_REQUEST['resetcode']))
+{
+	outputHeader("Reset an account password", "", "GENERIC");
+}
+else
+{
+	outputHeader("Register an account", "", "GENERIC");
+}
 $post = false;
 if($_SERVER['REQUEST_METHOD'] == 'POST')
 {
@@ -22,10 +29,15 @@ if(!$post || count($errors) > 0)
 ?>
 <form action='register' method='post'>
 	<table>
-		<tr class='comp <?= $post && $bad['username'] ? "bad" : "" ?>'><td><label for='username'>Username:</label></td><td><input id='username' name='username' style='width:10em' value='<?= $_REQUEST['username'] ?>' /></td></tr>
 <?
-if(!isset($_REQUEST['resetcode']))
+if(isset($_REQUEST['resetcode']))
+{
 ?>
+		<tr class='comp <?= $post && $bad['username'] ? "bad" : "" ?>'><td><label for='d_username'>Username:</label></td><td><input disabled='disabled' id='d_username' name='d_username' style='width:10em' value='<?= $_REQUEST['username'] ?>' /><input type='hidden' id='username' name='username' value='<?= $_REQUEST['username'] ?>' /></td></tr>
+<?
+} else {
+?>
+		<tr class='comp <?= $post && $bad['username'] ? "bad" : "" ?>'><td><label for='username'>Username:</label></td><td><input id='username' name='username' style='width:10em' value='<?= $_REQUEST['username'] ?>' /></td></tr>
 		<tr class='comp <?= $post && $bad['email'] ? "bad" : "" ?>'><td><label for='email'>Email Address:</label></td><td><input id='email' name='email' style='width:20em' value='<?= $_POST['email'] ?>' /></td></tr>
 <?
 }
@@ -33,11 +45,14 @@ if(!isset($_REQUEST['resetcode']))
 		<tr><td colspan='2'><hr /></td></tr>
 		<tr class='comp <?= $post && $bad['password1'] ? "bad" : "" ?>'><td><label for='password1'>Password:</label></td><td><input type='password' id='password1' name='password1' style='width:10em' value='<?= $_POST['password1'] ?>' /></td></tr>
 		<tr class='comp <?= $post && $bad['password2'] ? "bad" : "" ?>'><td><label for='password2'>Confirm Password:</label></td><td><input type='password' id='password2' name='password2' style='width:10em' value='<?= $_POST['password2'] ?>' /></td></tr>
-		<tr><td /><td><input type='submit' /></td></tr>
 <?
 if(isset($_REQUEST['resetcode']))
+{
 ?>
-		<tr class='comp <?= $post && $bad['resetcode'] ? "bad" : "" ?>'><td><label for='resetcode'>Reset Code:</label></td><td><input disabled='disabled' id='resetcode' name='resetcode' style='width:10em' value='<?= $_REQUEST['resetcode'] ?>' /></td></tr>
+		<tr class='comp <?= $post && $bad['resetcode'] ? "bad" : "" ?>'><td><label for='d_resetcode'>Reset Code:</label></td><td><input disabled='disabled' id='d_resetcode' name='d_resetcode' style='width:10em' value='<?= $_REQUEST['resetcode'] ?>' /><input type='hidden' id='resetcode' name='resetcode' value='<?= $_REQUEST['resetcode'] ?>' /></td></tr>
+<?
+}
+?>
 		<tr><td /><td><input type='submit' /></td></tr>
 	</table>
 </form>
@@ -57,7 +72,7 @@ else
 		else
 		{
 			$_SESSION['username'] = $_POST['username'];
-			echo "Your password has been changed and you are now logged in as ".$_SESSION['username'].".  <a href='..'>View your map list</a>.";
+			echo "Your password has been changed and you are now logged in as ".$_SESSION['username'].".  <a href='./'>View your map list</a>.";
 		}
 	}
 	else
@@ -90,7 +105,7 @@ function reset_user($username, $password, $resetcode)
 	$params[] = "'".mysql_real_escape_string($username)."'";
 	$params[] = "'".mysql_real_escape_string($resetcode)."'";
 	$params[] = "'".md5($password)."'";
-	$q = "UPDATE users SET password = ".$params[2].", resetcode = NULL, resettime = NULL WHERE username = ".$params[0]." AND resetcode = ".$params[1]." AND resettime > DATE_SUB(NOW(), INTERVAL 24 HOURS)";
+	$q = "UPDATE users SET password = ".$params[2].", resetcode = NULL, resettime = NULL WHERE username = ".$params[0]." AND resetcode = ".$params[1]." AND resettime > DATE_SUB(NOW(), INTERVAL 24 HOUR)";
 	return mysql_query($q);
 }
 function verify_registration_fields($fields)

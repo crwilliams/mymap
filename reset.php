@@ -22,7 +22,7 @@ if(!$post || count($errors) > 0)
 ?>
 <form action='reset' method='post'>
 	<table>
-		<tr class='comp <?= $post && $bad['identity'] ? "bad" : "" ?>'><td><label for='username'>Username or Email Address:</label></td><td><input id='identity' name='identity' style='width:10em' value='<?= $_POST['identity'] ?>' /></td></tr>
+		<tr class='comp <?= $post && $bad['identity'] ? "bad" : "" ?>'><td><label for='identity'>Username or Email Address:</label></td><td><input id='identity' name='identity' style='width:10em' value='<?= $_POST['identity'] ?>' /></td></tr>
 		<tr><td /><td><input type='submit' /></td></tr>
 	</table>
 </form>
@@ -36,23 +36,24 @@ else
 	echo 'Please check your email for a password reset link.';
 }
 outputFooter();
-function reset_user($username, $email)
+function reset_user($identity)
 {
-	$param = "'".mysql_real_escape_string($_POST['identity'])."'";
-	if(strpos($_POST['username'], '@') === false)
-		$q = 'SELECT * FROM users WHERE username = \''.$param.'\'';
+	$param = "'".mysql_real_escape_string($identity)."'";
+	if(strpos($identity, '@') === false)
+		$q = 'SELECT * FROM users WHERE username = '.$param;
 	else
-		$q = 'SELECT * FROM users WHERE email = \''.$param.'\'';
+		$q = 'SELECT * FROM users WHERE email = '.$param;
 	$res = mysql_query($q);
 	$userdetails = mysql_fetch_assoc($res);
 	if($userdetails)
 	{
 		$userdetails['resetcode'] = bin2hex(openssl_random_pseudo_bytes(16));
-		$q = "UPDATE users SET resetcode = '".$userdetails['resetcode']."' resettime = NOW() WHERE username = '".mysql_real_escape_string($_POST['identity'])."'";
-		mail($userdetails['email'], "Password Reset for opendatamap mymap", "To reset your password, visit http://".$_SERVER['SERVER_ADDR']."/mymap/register?user=".urlencode($userdetails['username'])."&resetcode=".$userdetails['resetcode']." within the next 24 hours.");
+		$q = "UPDATE users SET resetcode = '".$userdetails['resetcode']."', resettime = NOW() WHERE username = '".mysql_real_escape_string($userdetails['username'])."'";
+		mysql_query($q);
+		mail($userdetails['email'], "Password Reset for opendatamap mymap", "To reset your password, visit http://".$_SERVER['SERVER_NAME']."/mymap/register?username=".urlencode($userdetails['username'])."&resetcode=".$userdetails['resetcode']." within the next 24 hours.");
 	}
 }
-function verify_registration_fields($fields)
+function verify_reset_fields($fields)
 {
 	$errors = array();
 	$bad = array();
