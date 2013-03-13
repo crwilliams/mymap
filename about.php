@@ -1,7 +1,7 @@
 <?
 error_reporting(0);
 include 'functions.inc.php';
-outputHeader("About this tool", "", "GENERIC", true, true);
+outputHeader("About this tool", "", "GENERIC", false, false);
 ?>
 <p>
 This tool was created by <?= mklink('http://id.ecs.soton.ac.uk/person/23977', 'Colin R. Williams') ?> in order to assist in the creation of open geographic data.
