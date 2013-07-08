@@ -1,4 +1,5 @@
 <?
+include 'functions.inc.php';
 session_start();
 ?>
 <!DOCTYPE html>
@@ -10,110 +11,6 @@ session_start();
     <title>OpenDataMap mymap: Geo Data Set Editor</title>
     <link rel="stylesheet" type="text/css" href="../../css/jquery-ui.css" />
 <?php
-
-function getLatLongFromPostcode($postcode)
-{
-	require_once('/home/opendatamap/mysql.inc.php');
-	$params[] = mysql_real_escape_string(str_replace(' ', '', $postcode));
-	$q = 'SELECT latitude AS lat, longitude AS lon FROM postcode WHERE code = \''.$params[0].'\'';
-	$res = mysql_query($q);
-	if($row = mysql_fetch_assoc($res))
-	{
-		return $row;
-	}
-	return null;
-}
-
-function getLatLongFromBuildingNumber($bno)
-{
-	require_once('../inc/sparqllib.php');
-	$data = sparql_get("http://sparql.data.southampton.ac.uk", "
-	SELECT ?lat ?lon WHERE {
-		<http://id.southampton.ac.uk/building/$bno> <http://www.w3.org/2003/01/geo/wgs84_pos#lat> ?lat .
-		<http://id.southampton.ac.uk/building/$bno> <http://www.w3.org/2003/01/geo/wgs84_pos#long> ?lon .
-	}
-	", '../');
-	if(count($data) == 1)
-		return $data[0];
-	else
-		return null;
-}
-
-function loadCSV($filename, $base="", $idcolname, $namecolname, $iconcolname, $latcolname, $loncolname, $pccolname, $bnocolname, $location)
-{
-	$colnames = null;
-	$data = array();
-	if ($filename != '' && ($handle = fopen($filename, "r")) !== FALSE) {
-		while (($row = @fgetcsv($handle, 1000, ",")) !== FALSE) {
-			if($row[0] == '*COMMENT' || $row[0] == '')
-				continue;
-			$num = count($row);
-			if($colnames == null)
-			{
-				for ($c=0; $c < $num; $c++) {
-					$colnames[strtolower($row[$c])] = $c;
-				}
-			}
-			else
-			{
-				@$data[$base.$row[$colnames[$idcolname]]] = array(
-					'label' => str_replace('\'', '&apos;', $row[$colnames[$namecolname]]),
-					'icon' => $row[$colnames[$iconcolname]],
-					'lat' => $row[$colnames[$latcolname]],
-					'lon' => $row[$colnames[$loncolname]],
-					'pc' => $row[$colnames[$pccolname]],
-					'bno' => $row[$colnames[$bnocolname]],
-				);
-				if(
-					isset($data[$base.$row[$colnames[$idcolname]]]['lat']) &&
-					'' != $data[$base.$row[$colnames[$idcolname]]]['lat'] &&
-					isset($data[$base.$row[$colnames[$idcolname]]]['lon']) &&
-					'' != $data[$base.$row[$colnames[$idcolname]]]['lon']
-				)
-				{
-					$data[$base.$row[$colnames[$idcolname]]]['source'] = 'CSV';
-				}
-				else if(isset($data[$base.$row[$colnames[$idcolname]]]['pc']) && '' != $data[$base.$row[$colnames[$idcolname]]]['pc'])
-				{
-					$ll = getLatLongFromPostcode($data[$base.$row[$colnames[$idcolname]]]['pc']);
-					if(!is_null($ll))
-					{
-						$data[$base.$row[$colnames[$idcolname]]]['lat'] = $ll['lat'];
-						$data[$base.$row[$colnames[$idcolname]]]['lon'] = $ll['lon'];
-						$data[$base.$row[$colnames[$idcolname]]]['source'] = '<em>'.$data[$base.$row[$colnames[$idcolname]]]['pc'].'</em>';
-					}
-				}
-				else if(isset($data[$base.$row[$colnames[$idcolname]]]['bno']) && '' != $data[$base.$row[$colnames[$idcolname]]]['bno'])
-				{
-					$ll = getLatLongFromBuildingNumber($data[$base.$row[$colnames[$idcolname]]]['bno']);
-					if(!is_null($ll))
-					{
-						$data[$base.$row[$colnames[$idcolname]]]['lat'] = $ll['lat'];
-						$data[$base.$row[$colnames[$idcolname]]]['lon'] = $ll['lon'];
-						$data[$base.$row[$colnames[$idcolname]]]['source'] = '<em>B'.$data[$base.$row[$colnames[$idcolname]]]['bno'].'</em>';
-					}
-				}
-				if(isset($location[$row[$colnames[$idcolname]]]))
-				{
-					$data[$base.$row[$colnames[$idcolname]]]['lat'] = $location[$row[$colnames[$idcolname]]][0];
-					$data[$base.$row[$colnames[$idcolname]]]['lon'] = $location[$row[$colnames[$idcolname]]][1];
-					$data[$base.$row[$colnames[$idcolname]]]['source'] = $location[$row[$colnames[$idcolname]]][2];
-				}
-			}
-		}
-		fclose($handle);
-	}
-	
-	foreach($location as $id => $r)
-	{
-		if(!isset($data[$id]))
-		{
-			$data[$id] = array('label' => $r[3], 'icon' => $r[4], 'lat' => $r[0], 'lon' => $r[1], 'source' => $r[2]);
-		}
-	}
-
-	return $data;
-}
 
 $data = null;
 if($_REQUEST['m'] == 'iss-wifi')
@@ -139,7 +36,7 @@ else
 	{
 		if(substr($row['source'], 0, 7) == 'http://' || substr($row['source'], 0, 8) == 'https://' || $row['source'] == '')
 		{
-			$data = loadCSV($row['source'], '', 'code', 'name', 'icon', 'latitude', 'longitude', 'postcode', 'building', $location);
+			list($colnames, $data) = loadCSV($row['source'], '', 'code', 'name', 'icon', 'latitude', 'longitude', 'postcode', 'building', null, $location);
 		}
 		else
 		{
