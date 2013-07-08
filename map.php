@@ -4,19 +4,21 @@ session_start();
 ?>
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <title>OpenDataMap mymap: Geo Data Set Editor</title>
-    <link rel="stylesheet" type="text/css" href="../../css/jquery-ui.css" />
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<title>OpenDataMap mymap: Geo Data Set Editor</title>
+		<link rel="stylesheet" type="text/css" href="../../css/jquery-ui.css" />
 <?php
 
 $data = null;
 if($_REQUEST['m'] == 'iss-wifi')
 {
 	foreach(array('A', 'B', 'C', 'D', 'E', 'F', 'G') as $l)
+	{
 		$data[$l] = array('label' => 'Access Point '.$l, 'icon' => 'http://data.southampton.ac.uk/map-icons/Offices/wifi.png');
+	}
 }
 else
 {
@@ -53,7 +55,7 @@ else
 if(is_null($data))
 {
 ?>
-  </head>
+	</head>
 	<body>
 		Map not found.
 	</body>
@@ -62,104 +64,104 @@ if(is_null($data))
 else
 {
 ?>
-    <style type="text/css">
-	html, body, #map {
-	    height: 100%;
-	    margin: 0px;
-	    padding: 0px;
-	}
+		<style type="text/css">
+html, body, #map {
+	height: 100%;
+	margin: 0px;
+	padding: 0px;
+}
 
-	#map {
-		z-index: 0;
-		position: fixed;
-		top: 0;
-		left: 0;
-		width: 80%;
-	}
-        .olControlAttribution { bottom: 0px!important }
+#map {
+	z-index: 0;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 80%;
+}
+.olControlAttribution { bottom: 0px!important }
 
-        /* avoid pink tiles */
-        .olImageLoadError {
-            background-color: transparent !important;
-        }
+/* avoid pink tiles */
+.olImageLoadError {
+	background-color: transparent !important;
+}
 
-	#controls {
-		position: absolute;
-		width: 18%;
-		height: 100%;
-		top: 1%;
-		right: 1%;
-		z-index: 1000;
-		background-color:white;
-	}
+#controls {
+	position: absolute;
+	width: 18%;
+	height: 100%;
+	top: 1%;
+	right: 1%;
+	z-index: 1000;
+	background-color:white;
+}
 
-	#list {
-		margin: 0;
-		padding: 0;
-	}
-	
-	#listheader {
-		position: fixed;
-		right: 21%;
-		top: 1%;
-		z-index: 1000;
-		margin: 0;
-		padding: 0;
-		border: none;
-		background-color: white;
-	}
+#list {
+	margin: 0;
+	padding: 0;
+}
 
-	#links,#actionText,#save,#list {
-	}
+#listheader {
+	position: fixed;
+	right: 21%;
+	top: 1%;
+	z-index: 1000;
+	margin: 0;
+	padding: 0;
+	border: none;
+	background-color: white;
+}
 
-	#actionText {
-		margin: 5px;
-		height: 50%;
-	}
+#links,#actionText,#save,#list {
+}
 
-	#links,#save {
-		margin: 5px;
-		height: 20%;
-		text-align: right;
-	}
+#actionText {
+	margin: 5px;
+	height: 50%;
+}
 
-	span.small {
-		font-size: 0.6em;
-		color: gray;
-	}
+#links,#save {
+	margin: 5px;
+	height: 20%;
+	text-align: right;
+}
 
-	ul {
-		list-style: none;
-		margin: 0;
-		padding: 0;
-	}
+span.small {
+	font-size: 0.6em;
+	color: gray;
+}
 
-	#list li {
-		padding: 5px;
-		border: solid 1px black;
-		margin: 3px;
-	}
+ul {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
 
-	#icon-classes {
-		font-size: 0.5em;
-	}
+#list li {
+	padding: 5px;
+	border: solid 1px black;
+	margin: 3px;
+}
 
-	#icon-classes img {
-		padding: 1px;
-	}
+#icon-classes {
+	font-size: 0.5em;
+}
 
-	#dialog-modal td {
-		vertical-align: top;
-	}
+#icon-classes img {
+	padding: 1px;
+}
 
-	#dialog-modal label {
-		top: 5px;
-		position: relative;
-	}
+#dialog-modal td {
+	vertical-align: top;
+}
 
-	#dialog-modal input {
-		width: 35em;
-	}
+#dialog-modal label {
+	top: 5px;
+	position: relative;
+}
+
+#dialog-modal input {
+	width: 35em;
+}
 
 <?php
 $col['Nature'] = '128e4d';
@@ -179,37 +181,59 @@ $col['Suggestions'] = '333333';
 foreach($col as $name => $colour)
 {
 ?>
-	li#tab-<?php echo $name ?> {
-		background:#<?php echo $colour ?>;
-	}
-	#tab-<?php echo $name ?> span {
-		color:white;
-	}
+li#tab-<?php echo $name ?> {
+	background:#<?php echo $colour ?>;
+}
+#tab-<?php echo $name ?> span {
+	color:white;
+}
 <?
 }
 ?>
 
-	a:link, a:hover, a:visited {
-		text-decoration: none;
-		color: blue;
-	}
+a:link, a:hover, a:visited {
+	text-decoration: none;
+	color: blue;
+}
 
 /* Vertical Tabs
 ----------------------------------*/
-.ui-tabs-vertical { width: 55em; }
-.ui-tabs-vertical .ui-tabs-nav { padding: .2em .1em .2em .2em; float: left; width: 15em; }
-.ui-tabs-vertical .ui-tabs-nav li { clear: left; width: 100%; border-bottom-width: 1px !important; border-right-width: 0 !important; margin: 0 -1px .2em 0; }
-.ui-tabs-vertical .ui-tabs-nav li a { display:block; }
-.ui-tabs-vertical .ui-tabs-nav li.ui-tabs-selected { padding-bottom: 0; padding-right: .1em; border-right-width: 1px; border-right-width: 1px; }
-.ui-tabs-vertical .ui-tabs-panel { padding: 1em; float: right; width: 37em;}
+.ui-tabs-vertical {
+	width: 55em;
+}
+.ui-tabs-vertical .ui-tabs-nav {
+	padding: .2em .1em .2em .2em;
+	float: left;
+	width: 15em;
+}
+.ui-tabs-vertical .ui-tabs-nav li {
+	clear: left;
+	width: 100%;
+	border-bottom-width: 1px !important;
+	border-right-width: 0 !important;
+	margin: 0 -1px .2em 0;
+}
+.ui-tabs-vertical .ui-tabs-nav li a {
+	display:block;
+}
+.ui-tabs-vertical .ui-tabs-nav li.ui-tabs-selected {
+	padding-bottom: 0;
+	padding-right: .1em;
+	border-right-width: 1px;
+	border-right-width: 1px;
+}
+.ui-tabs-vertical .ui-tabs-panel {
+	padding: 1em;
+	float: right;
+	width: 37em;
+}
+		</style>
 
-    </style>
-
-    <script src="../../OpenLayers-2.11/OpenLayers.js"></script>
-    <script src="../../OS.js"></script>
-    <script src="../../jquery-1.6.2.min.js"></script>
-    <script src="../../jquery-ui-1.8.16.min.js"></script>
-    <script type="text/javascript">
+		<script src="../../OpenLayers-2.11/OpenLayers.js"></script>
+		<script src="../../OS.js"></script>
+		<script src="../../jquery-1.6.2.min.js"></script>
+		<script src="../../jquery-ui-1.8.16.min.js"></script>
+		<script type="text/javascript">
 $(function() {
 });
 
@@ -226,14 +250,14 @@ var label = new Array();
 var icons = new Array();
 var iconCounts = new Array();
 
-// increase reload attempts 
+// increase reload attemptscurl
 OpenLayers.IMAGE_RELOAD_ATTEMPTS = 3;
 
 function focusPoint(positionUri) {
 	var existingMarker = markers.getFeatureByFid(positionUri);
 	if(existingMarker != null)
 	{
-        	map.panTo(new OpenLayers.LonLat(existingMarker.geometry.x, existingMarker.geometry.y));
+		map.panTo(new OpenLayers.LonLat(existingMarker.geometry.x, existingMarker.geometry.y));
 	}
 }
 
@@ -243,28 +267,28 @@ function selectIcon(uri) {
 }
 
 function drop(positionUri, pixel, requireUpdateFeature) {
-    if(positionUri == undefined)
-	return;
-    var lonlat = map.getLonLatFromViewPortPx(pixel);
-    var llc = lonlat.clone();
+	if(positionUri == undefined)
+		return;
+	var lonlat = map.getLonLatFromViewPortPx(pixel);
+	var llc = lonlat.clone();
 
-    if(requireUpdateFeature)
-    {
-	var existingMarker = markers.getFeatureByFid(positionUri);
-	if(existingMarker != null)
+	if(requireUpdateFeature)
 	{
-	    markers.removeFeatures(existingMarker);
-	}
+		var existingMarker = markers.getFeatureByFid(positionUri);
+		if(existingMarker != null)
+		{
+			markers.removeFeatures(existingMarker);
+		}
 
-	p[positionUri] = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Point(llc.lon, llc.lat), positionUri, { externalGraphic: icons[positionUri], graphicWidth: 32, graphicHeight: 37, graphicXOffset: -16, graphicYOffset: -37, graphicTitle: label[positionUri], graphicOpacity: 0.7 });
-	p[positionUri].fid = positionUri;
-	markers.addFeatures(p[positionUri]);
-    }
-    changed[positionUri] = true;
-    llc.transform(map.getProjectionObject(), wgs84);
-    document.getElementById('loc_'+positionUri).innerHTML = Math.round(llc.lat*1000000)/1000000+'/'+Math.round(llc.lon*1000000)/1000000;
-    positionUri = undefined;
-    document.getElementById('save_link').style.display = "block";
+		p[positionUri] = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Point(llc.lon, llc.lat), positionUri, { externalGraphic: icons[positionUri], graphicWidth: 32, graphicHeight: 37, graphicXOffset: -16, graphicYOffset: -37, graphicTitle: label[positionUri], graphicOpacity: 0.7 });
+		p[positionUri].fid = positionUri;
+		markers.addFeatures(p[positionUri]);
+	}
+	changed[positionUri] = true;
+	llc.transform(map.getProjectionObject(), wgs84);
+	document.getElementById('loc_'+positionUri).innerHTML = Math.round(llc.lat*1000000)/1000000+'/'+Math.round(llc.lon*1000000)/1000000;
+	positionUri = undefined;
+	document.getElementById('save_link').style.display = "block";
 }
 
 function save(){
@@ -333,7 +357,7 @@ function newDialog(pixel){
 					label[uri] = $('#name')[0].value;
 					var newli = "<li id='" + uri + "' onclick=\"focusPoint('" + uri + "');\"><img class='draggable' style='z-index:1000; float:left; margin-right:5px' src='" + icons[uri] + "' />" + label[uri] + "<br/><span class='small' id='loc_" + uri + "'>Location not set</span></li>";
 					$("#points").append(newli);
-    					$("#" + uri + " .draggable").draggable({
+					$("#" + uri + " .draggable").draggable({
 						cursorAt: {cursor: "crosshair", top: 39, left: 17},
 						helper: function(event) {lastevent = event; return $("<img src='"+event.currentTarget.src+"' />")},
 						revert: "invalid"
@@ -346,60 +370,60 @@ function newDialog(pixel){
 }
 
 function init(){
-    $(".draggable").draggable({
-	cursorAt: {cursor: "crosshair", top: 39, left: 17},
-	helper: function(event) {lastevent = event; return $("<img src='"+event.currentTarget.src+"' />")},
-	revert: "invalid"
-    });
+	$(".draggable").draggable({
+		cursorAt: {cursor: "crosshair", top: 39, left: 17},
+		helper: function(event) {lastevent = event; return $("<img src='"+event.currentTarget.src+"' />")},
+		revert: "invalid"
+	});
 
-    $('#icon-classes').tabs({
-			ajaxOptions: {
-				error: function( xhr, status, index, anchor ) {
-					$( anchor.hash ).html("Failed");
-				}
+	$('#icon-classes').tabs({
+		ajaxOptions: {
+			error: function( xhr, status, index, anchor ) {
+				$( anchor.hash ).html("Failed");
 			}
-    }).addClass('ui-tabs-vertical ui-helper-clearfix');
-    $('#icon-classes li').removeClass('ui-corner-top').addClass('ui-corner-left');
-
-    $("#map").droppable({
-	drop: function(event, ui) {
-		var id = lastevent.currentTarget.parentElement.id;
-		lastevent = event;
-		var pixel = new OpenLayers.Pixel(event.pageX-window.pageXOffset-1, event.pageY-window.pageYOffset-2);
-		if(id == '_new_')
-		{
-			newDialog(pixel);
 		}
-		else
-		{
-			drop(id, pixel, true);
-		}
-		lastevent = event;
-	 },
-    });
+	}).addClass('ui-tabs-vertical ui-helper-clearfix');
+	$('#icon-classes li').removeClass('ui-corner-top').addClass('ui-corner-left');
 
-    var maxExtent = new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508),
-        restrictedExtent = maxExtent.clone(),
-        maxResolution = 156543.0339;
-    
-    var options = {
-        projection: new OpenLayers.Projection("EPSG:900913"),
-        displayProjection: new OpenLayers.Projection("EPSG:4326"),
-        units: "m",
-        numZoomLevels: 18,
-        maxResolution: maxResolution,
-        maxExtent: maxExtent,
-        restrictedExtent: restrictedExtent
-    };
-    map = new OpenLayers.Map('map', options);
+	$("#map").droppable({
+		drop: function(event, ui) {
+			var id = lastevent.currentTarget.parentElement.id;
+			lastevent = event;
+			var pixel = new OpenLayers.Pixel(event.pageX-window.pageXOffset-1, event.pageY-window.pageYOffset-2);
+			if(id == '_new_')
+			{
+				newDialog(pixel);
+			}
+			else
+			{
+				drop(id, pixel, true);
+			}
+			lastevent = event;
+		},
+	});
 
-    var streetview = new OpenLayers.Layer.StreetView("OS StreetView (1:10000)");
+	var maxExtent = new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508),
+	    restrictedExtent = maxExtent.clone(),
+	    maxResolution = 156543.0339;
 
-    markers = new OpenLayers.Layer.Vector("Editable Markers");
+	var options = {
+		projection: new OpenLayers.Projection("EPSG:900913"),
+		displayProjection: new OpenLayers.Projection("EPSG:4326"),
+		units: "m",
+		numZoomLevels: 18,
+		maxResolution: maxResolution,
+		maxExtent: maxExtent,
+		restrictedExtent: restrictedExtent
+	};
+	map = new OpenLayers.Map('map', options);
 
-    map.addLayers([streetview, markers]);
+	var streetview = new OpenLayers.Layer.StreetView("OS StreetView (1:10000)");
 
-    var features = new Array();
+	markers = new OpenLayers.Layer.Vector("Editable Markers");
+
+	map.addLayers([streetview, markers]);
+
+	var features = new Array();
 <?
 foreach($data as $uri => $point)
 {
@@ -415,31 +439,31 @@ foreach($data as $uri => $point)
 	echo "features.push(p['$uri']);\n";
 }
 ?>
-    markers.addFeatures(features);
-    if (!map.getCenter()) {
-	if(markers.features.length == 0)
-	{
-		bounds = new OpenLayers.Bounds(-6.379880, 49.871159, 1.768960, 55.811741);
-        	bounds.transform(wgs84, map.getProjectionObject());
+	markers.addFeatures(features);
+	if (!map.getCenter()) {
+		if(markers.features.length == 0)
+		{
+			bounds = new OpenLayers.Bounds(-6.379880, 49.871159, 1.768960, 55.811741);
+			bounds.transform(wgs84, map.getProjectionObject());
+		}
+		else
+		{
+			bounds = markers.getDataExtent();
+		}
+		map.zoomToExtent(bounds);
+		if (map.getZoom() < 6) map.zoomTo(6);
 	}
-	else
-	{
-		bounds = markers.getDataExtent();
-	}
-        map.zoomToExtent(bounds);
-        if (map.getZoom() < 6) map.zoomTo(6);
-    }
 
-                var drag = new OpenLayers.Control.DragFeature(markers, {
-		    onComplete : function(feature, pixel)
-		    {
+	var drag = new OpenLayers.Control.DragFeature(markers, {
+		onComplete : function(feature, pixel)
+		{
 			drop(feature.fid, pixel, false);
 			feature.style.graphicOpacity = 0.7;
 			markers.redraw();
-		    }
-		});
-                map.addControl(drag);
-                drag.activate();
+		}
+	});
+	map.addControl(drag);
+	drag.activate();
 }
 
 
@@ -457,21 +481,21 @@ foreach($iconcounts as $k => $v)
 }
 ?>
 
-    </script>
-  </head>
-  <body onload="init()">
-    <div id='listheader'>
-	<ul id='links'>
-		<li><a href='../../<?= $_REQUEST['u'] ?>'>Back to map list <img src='../../icons/map.png' /></a></li>
-		<li><a href='../<?= $_REQUEST['m'] ?>.rdf'>View RDF <img src='../../icons/page_white_code.png' /></a></li>
-		<li><a href='../<?= $_REQUEST['m'] ?>.kml'>View KML <img src='../../icons/page_white_code.png' /></a></li>
-		<li id='save_link' style='display: none'><a href='#' onclick='save();'>Save <img src='../../icons/disk.png' /></a></li>
-	</div>
-    </div>
-    <div id="controls">
-	<div id='list'>
-	<ul id='points'>
-		<li id='_new_'><img class='draggable' style='z-index:1000; float:left; margin-right:5px' src='http://opendatamap.ecs.soton.ac.uk/img/icon/Media/blank.png' />New Point<br /><span class='small'>Drag to location to add new point.</span></li>
+		</script>
+	</head>
+	<body onload="init()">
+		<div id='listheader'>
+			<ul id='links'>
+				<li><a href='../../<?= $_REQUEST['u'] ?>'>Back to map list <img src='../../icons/map.png' /></a></li>
+				<li><a href='../<?= $_REQUEST['m'] ?>.rdf'>View RDF <img src='../../icons/page_white_code.png' /></a></li>
+				<li><a href='../<?= $_REQUEST['m'] ?>.kml'>View KML <img src='../../icons/page_white_code.png' /></a></li>
+				<li id='save_link' style='display: none'><a href='#' onclick='save();'>Save <img src='../../icons/disk.png' /></a></li>
+			</ul>
+		</div>
+		<div id="controls">
+			<div id='list'>
+				<ul id='points'>
+					<li id='_new_'><img class='draggable' style='z-index:1000; float:left; margin-right:5px' src='http://opendatamap.ecs.soton.ac.uk/img/icon/Media/blank.png' />New Point<br /><span class='small'>Drag to location to add new point.</span></li>
 <?php
 foreach($data as $uri => $item)
 {
@@ -491,18 +515,18 @@ foreach($data as $uri => $item)
 	echo "</span></li>\n";
 }
 ?>
-	</ul>
-    	</div>
-    </div>
-    <div id="dialog-modal" style="display:none" title="Add Location">
-	<form>
-		<table style='margin-left:auto; margin-right:auto;'>
-			<tr><td><label for='name'>Title:</label></td><td><input id='name' name='name' onchange='processName()' onkeyup='processName()' /></td></tr>
-			<tr><td><label for='uri'>ID:</label></td><td><input id='uri' name='uri' /></td></tr>
-			<tr><td><label for='icon'>Icon:</label></td><td><img id='selected-icon' src='' title='Selected icon' style='width:32px; height:37px;'/><br /><input id='icon' name='icon' style='display:none'/>
-				<div id="icon-classes">
-					<ul>
-						<li id="tab-Suggestions"><a href="#suggestions"><span>Suggestions</span></a></li>
+				</ul>
+			</div>
+		</div>
+		<div id="dialog-modal" style="display:none" title="Add Location">
+			<form>
+				<table style='margin-left:auto; margin-right:auto;'>
+					<tr><td><label for='name'>Title:</label></td><td><input id='name' name='name' onchange='processName()' onkeyup='processName()' /></td></tr>
+					<tr><td><label for='uri'>ID:</label></td><td><input id='uri' name='uri' /></td></tr>
+					<tr><td><label for='icon'>Icon:</label></td><td><img id='selected-icon' src='' title='Selected icon' style='width:32px; height:37px;'/><br /><input id='icon' name='icon' style='display:none'/>
+						<div id="icon-classes">
+							<ul>
+								<li id="tab-Suggestions"><a href="#suggestions"><span>Suggestions</span></a></li>
 <?php
 ksort($col);
 foreach(array_keys($col) as $cat)
@@ -512,8 +536,8 @@ foreach(array_keys($col) as $cat)
 	echo '<li id="tab-'.$cat.'"><a href="../../icons.php?cat='.$cat.'"><span>'.$cat.'</span></a></li>';
 }
 ?>
-					</ul>
-					<div id='suggestions'>
+							</ul>
+							<div id='suggestions'>
 <?
 	arsort($iconcounts);
 	foreach($iconcounts as $file => $count)
@@ -524,15 +548,15 @@ foreach(array_keys($col) as $cat)
 		$filename = substr($filename, 0, -4);
 		echo "<img id='img-$filename' src='$file' alt='$filename icon' title='$filename' onclick='selectIcon(\"$file\")' />";
 	}
-?>						
-					</div>
-				</div>
-			</td></tr>
-		</table>
-	</form>
-    </div>
-    <div id="map" class="smallmap"></div>
-  </body>
+?>
+							</div>
+						</div>
+					</td></tr>
+				</table>
+			</form>
+		</div>
+		<div id="map" class="smallmap"></div>
+	</body>
 <?php
 }
 ?>
