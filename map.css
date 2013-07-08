@@ -1,0 +1,134 @@
+html, body, #map {
+	height: 100%;
+	margin: 0px;
+	padding: 0px;
+}
+
+#map {
+	z-index: 0;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 80%;
+}
+.olControlAttribution { bottom: 0px!important }
+
+/* avoid pink tiles */
+.olImageLoadError {
+	background-color: transparent !important;
+}
+
+#controls {
+	position: absolute;
+	width: 18%;
+	height: 100%;
+	top: 1%;
+	right: 1%;
+	z-index: 1000;
+	background-color:white;
+}
+
+#list {
+	margin: 0;
+	padding: 0;
+}
+
+#listheader {
+	position: fixed;
+	right: 21%;
+	top: 1%;
+	z-index: 1000;
+	margin: 0;
+	padding: 0;
+	border: none;
+	background-color: white;
+}
+
+#links,#actionText,#save,#list {
+}
+
+#actionText {
+	margin: 5px;
+	height: 50%;
+}
+
+#links,#save {
+	margin: 5px;
+	height: 20%;
+	text-align: right;
+}
+
+span.small {
+	font-size: 0.6em;
+	color: gray;
+}
+
+ul {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+#list li {
+	padding: 5px;
+	border: solid 1px black;
+	margin: 3px;
+}
+
+#icon-classes {
+	font-size: 0.5em;
+}
+
+#icon-classes img {
+	padding: 1px;
+}
+
+#dialog-modal td {
+	vertical-align: top;
+}
+
+#dialog-modal label {
+	top: 5px;
+	position: relative;
+}
+
+#dialog-modal input {
+	width: 35em;
+}
+
+a:link, a:hover, a:visited {
+	text-decoration: none;
+	color: blue;
+}
+
+/* Vertical Tabs
+----------------------------------*/
+.ui-tabs-vertical {
+	width: 55em;
+}
+.ui-tabs-vertical .ui-tabs-nav {
+	padding: .2em .1em .2em .2em;
+	float: left;
+	width: 15em;
+}
+.ui-tabs-vertical .ui-tabs-nav li {
+	clear: left;
+	width: 100%;
+	border-bottom-width: 1px !important;
+	border-right-width: 0 !important;
+	margin: 0 -1px .2em 0;
+}
+.ui-tabs-vertical .ui-tabs-nav li a {
+	display:block;
+}
+.ui-tabs-vertical .ui-tabs-nav li.ui-tabs-selected {
+	padding-bottom: 0;
+	padding-right: .1em;
+	border-right-width: 1px;
+	border-right-width: 1px;
+}
+.ui-tabs-vertical .ui-tabs-panel {
+	padding: 1em;
+	float: right;
+	width: 37em;
+}
