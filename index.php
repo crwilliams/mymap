@@ -42,6 +42,7 @@ while($row = mysql_fetch_assoc($res))
 	echo '<li>'.$row['name'];
 	echo ' | <a href=\''.$username.'/'.$row['mapid'].'.rdf\'>(View RDF)</a>';
 	echo ' | <a href=\''.$username.'/'.$row['mapid'].'.kml\'>(View KML)</a>';
+	echo ' | <a href=\''.$username.'/'.$row['mapid'].'.csv\'>(View CSV)</a>';
 	if($editmode)
 		echo ' | <a href=\''.$username.'/'.$row['mapid'].'/edit\'>(Edit)</a>';
 	echo '</li>';
