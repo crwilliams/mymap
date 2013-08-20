@@ -62,5 +62,15 @@ while($row = mysql_fetch_assoc($res))
   </rdf:Description>
 <?php
 }
+$q = 'SELECT uri, wkt FROM mappolygons WHERE username = \''.$params[0].'\' AND map = \''.$params[1].'\' order by `uri`';
+$res = mysql_query($q);
+while($row = mysql_fetch_assoc($res))
+{
+?>
+  <rdf:Description rdf:about="<?php echo addBase($base, $row['uri']) ?>">
+    <dct:spatial><?php echo htmlentities($row['wkt']) ?></dct:spatial>
+  </rdf:Description>
+<?php
+}
 ?>
 </rdf:RDF>
