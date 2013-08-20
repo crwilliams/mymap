@@ -12,4 +12,5 @@ RewriteRule ^([A-Za-z0-9]+)/([A-Za-z0-9-]+).kml$ kml.php?u=$1&m=$2
 RewriteRule ^([A-Za-z0-9]+)/([A-Za-z0-9-]+).rdf$ rdf.php?u=$1&m=$2
 RewriteRule ^([A-Za-z0-9]+)/([A-Za-z0-9-]+).csv$ csv-combined.php?u=$1&m=$2
 RewriteRule ^([A-Za-z0-9]+)/([A-Za-z0-9-]+).points.csv$ csv-points.php?u=$1&m=$2
+RewriteRule ^([A-Za-z0-9]+)/([A-Za-z0-9-]+).polygons.csv$ csv-polygons.php?u=$1&m=$2
 RewriteRule ^([A-Za-z0-9]+)/([A-Za-z0-9-]+)/edit$ map.php?u=$1&m=$2
