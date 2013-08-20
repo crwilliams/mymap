@@ -34,20 +34,44 @@ else
 }
 
 $params[] = mysql_real_escape_string($username);
-$q = 'SELECT mapid, name FROM maps WHERE username = \''.$params[0].'\' order by `name`';
+$q = 'SELECT maps.mapid, maps.name, COUNT(mappoints.uri) AS points, COUNT(mappolygons.uri) AS polygons FROM maps LEFT JOIN mappoints ON maps.mapid = mappoints.map AND maps.username = mappoints.username LEFT JOIN mappolygons ON maps.mapid = mappolygons.map AND maps.username = mappolygons.username WHERE maps.username = \''.$params[0].'\' GROUP BY maps.mapid, maps.name ORDER BY maps.name';
 $res = mysql_query($q);
-echo '<ul>';
+echo '<table>';
 while($row = mysql_fetch_assoc($res))
 {
-	echo '<li>'.$row['name'];
-	echo ' | <a href=\''.$username.'/'.$row['mapid'].'.rdf\'>(View RDF)</a>';
-	echo ' | <a href=\''.$username.'/'.$row['mapid'].'.kml\'>(View KML)</a>';
-	echo ' | <a href=\''.$username.'/'.$row['mapid'].'.csv\'>(View CSV)</a>';
+	echo '<tr><td>'.$row['name'].'</td>';
+	if($row['points'] + $row['polygons'] > 0)
+	{
+		echo '<td><a href=\''.$username.'/'.$row['mapid'].'.rdf\'>RDF</a></td>';
+		echo '<td><a href=\''.$username.'/'.$row['mapid'].'.kml\'>KML</a></td>';
+		if($row['points'] > 0)
+		{
+			echo '<td><a href=\''.$username.'/'.$row['mapid'].'.points.csv\'>CSV ('.$row['points'].' points)</a></td>';
+		}
+		else
+		{
+			echo '<td />';
+		}
+		if($row['polygons'] > 0)
+		{
+			echo '<td><a href=\''.$username.'/'.$row['mapid'].'.polygons.csv\'>CSV ('.$row['polygons'].' polygons)</a></td>';
+		}
+		else
+		{
+			echo '<td />';
+		}
+	}
+	else
+	{
+		echo '<td colspan=\'4\' style=\'font-style: italic\'>Empty map</td>';
+	}
 	if($editmode)
-		echo ' | <a href=\''.$username.'/'.$row['mapid'].'/edit\'>(Edit)</a>';
-	echo '</li>';
+	{
+		echo '<td><a href=\''.$username.'/'.$row['mapid'].'/edit\'>Edit</a></td>';
+	}
+	echo '</tr>';
 }
-echo '</ul>';
+echo '</table>';
 if($editmode)
 {
 ?>
