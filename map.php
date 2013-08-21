@@ -249,7 +249,7 @@ function outputIconCategories($col)
 	{
 		if($cat == 'Suggestions')
 			continue;
-		echo '\t\t\t\t\t\t\t\t\t<li id="tab-'.$cat.'"><a href="../../icons.php?cat='.$cat.'"><span>'.$cat.'</span></a></li>';
+		echo "\t\t\t\t\t\t\t\t\t".'<li id="tab-'.$cat.'"><a href="../../icons.php?cat='.$cat.'"><span>'.$cat.'</span></a></li>';
 	}
 }
 
@@ -258,7 +258,7 @@ function outputSuggestions($iconcounts)
 	arsort($iconcounts);
 	foreach($iconcounts as $file => $count)
 	{
-		echo '\t\t\t\t\t\t\t\t<!-- '.$file.' -->';
+		echo "\t\t\t\t\t\t\t\t".'<!-- '.$file.' -->';
 		$parts = explode('/', $file);
 		$filename = array_pop($parts);
 		$filename = substr($filename, 0, -4);
