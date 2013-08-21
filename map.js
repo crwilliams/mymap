@@ -109,7 +109,7 @@ function save() {
 function processName() {
     "use strict";
     if (prevname !== $('#name')[0].value) {
-        $('#uri')[0].value = $('#name')[0].value.toLowerCase().replace(/\D/g, '-');
+        $('#uri')[0].value = $('#name')[0].value.toLowerCase().replace(/\W/g, '-');
     }
     prevname = $('#name')[0].value;
 }
@@ -129,9 +129,9 @@ function newDialog(pixel) {
                     alert('Title not set.');
                 } else if (uri === '') {
                     alert('ID not set.');
-                } else if (uri !== uri.toLowerCase().replace(/\D/g, '-')) {
+                } else if (uri !== uri.toLowerCase().replace(/\W/g, '-')) {
                     alert('ID does not meet requirements.  Updating ID...');
-                    $('#uri')[0].value = uri.toLowerCase().replace(/\D/g, '-');
+                    $('#uri')[0].value = uri.toLowerCase().replace(/\W/g, '-');
                 } else if ($('#icon')[0].value === '') {
                     alert('Icon not set.');
                 } else if (p[uri] !== undefined) {
