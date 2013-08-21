@@ -87,7 +87,7 @@ function save() {
         i += 1;
     }
     OpenLayers.Request.POST({
-        url : saveURL,
+        url : "http://opendatamap.ecs.soton.ac.uk/mymap/save.php?username=" + param_username + "&map=" + param_map,
         data : str,
         success : function (response) {
             var q;

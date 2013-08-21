@@ -61,8 +61,8 @@ li#tab-<?php echo $name ?> {
 		<script src="../../jquery-1.6.2.min.js"></script>
 		<script src="../../jquery-ui-1.8.16.min.js"></script>
 		<script type="text/javascript">
-var saveURL = "http://opendatamap.ecs.soton.ac.uk/dev/colin/edit/save.php?";
-saveURL += "username=<?= $_REQUEST['u'] ?>&map=<?= $_REQUEST['m'] ?>";
+var param_username = "<?= $_REQUEST['u'] ?>";
+var param_map = "<?= $_REQUEST['m'] ?>";
 
 var features = new Array();
 <?php
