@@ -4,11 +4,12 @@ $(function () {
 
 // make map available for easy debugging
 var map,
-    vector,
+    vectors,
     markers,
     p = [],
     changed = [],
     ll = [],
+    changedPolygons = [],
     wgs84 = new OpenLayers.Projection("EPSG:4326"),
     osgb = new OpenLayers.Projection("EPSG:27700"),
     positionUri,
@@ -16,7 +17,8 @@ var map,
     icons = [],
     iconCounts = [],
     lastevent,
-    prevname = '';
+    prevname = '',
+    wkt = new OpenLayers.Format.WKT();
 
 // increase reload attemptscurl
 OpenLayers.IMAGE_RELOAD_ATTEMPTS = 3;
@@ -107,6 +109,29 @@ function save() {
     return i;
 }
 
+function loadPolygons() {
+    "use strict";
+    OpenLayers.Request.GET({
+        url : "http://opendatamap.ecs.soton.ac.uk/mymap/load-polygons.php?u=" + param_username + "&m=" + param_map,
+        success : function (response) {
+            var d = JSON.parse(response.responseText);
+            var v;
+            var vector;
+            var vfeatures = [];
+            for (v in d) {
+                vector = new OpenLayers.Feature.Vector(OpenLayers.Geometry.fromWKT(d[v].wkt).transform(wgs84, osgb));
+                vector.fid = d[v].uri;
+                vfeatures.push(vector);
+            }
+            vectors.addFeatures(vfeatures);
+            setBounds();
+        },
+        failure : function (response) {
+            alert(response.responseText);
+        }
+    });
+}
+
 function processName() {
     "use strict";
     if (prevname !== $('#name')[0].value) {
@@ -158,6 +183,13 @@ function newDialog(pixel) {
             }
         }
     });
+}
+
+function report(event) {
+    if (event.type == 'afterfeaturemodified') {
+        changedPolygons[event.feature.fid] = wkt.write(new OpenLayers.Feature.Vector(event.feature.geometry.clone().transform(osgb, wgs84)));
+        document.getElementById('save_link').style.display = "block";
+    }
 }
 
 function init() {
@@ -216,7 +248,24 @@ function init() {
     streetview = new OpenLayers.Layer.StreetView("OS StreetView (1:10000)");
     markers = new OpenLayers.Layer.Vector("Editable Markers");
 
-    map.addLayers([streetview, markers]);
+    var renderer = OpenLayers.Layer.Vector.prototype.renderers;
+    vectors = new OpenLayers.Layer.Vector("Vector Layer", {
+        renderers: renderer
+    });
+
+    loadPolygons();
+
+    vectors.events.on({
+        "beforefeaturemodified": report,
+        "featuremodified": report,
+        "afterfeaturemodified": report,
+        "vertexmodified": report,
+        "sketchmodified": report,
+        "sketchstarted": report,
+        "sketchcomplete": report
+    });
+
+    map.addLayers([streetview, markers, vectors]);
 
     markers.addFeatures(features);
     if (!map.getCenter()) {
