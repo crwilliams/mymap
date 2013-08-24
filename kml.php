@@ -52,7 +52,7 @@ while($row = mysql_fetch_assoc($res))
 <?php
 }
 
-require_once('geoPHP/geoPHP.inc');
+require_once('lib/geoPHP/geoPHP.inc');
 $wkt = new wkt();
 $kml = new kml();
 function convertWKTtoKML($data)
