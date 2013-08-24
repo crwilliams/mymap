@@ -271,12 +271,11 @@ console.log(bounds);
 
 function init() {
     "use strict";
-    var maxExtent = new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508),
+    var maxExtent = new OpenLayers.Bounds(0, 0, 700000, 1300000),
         restrictedExtent = maxExtent.clone(),
         maxResolution = 156543.0339,
         options,
-        streetview,
-        bounds;
+        streetview;
 
     $(".draggable").draggable({
         cursorAt: {cursor: "crosshair", top: 39, left: 17},
@@ -313,17 +312,23 @@ function init() {
     });
 
     options = {
-        projection: new OpenLayers.Projection("EPSG:900913"),
-        displayProjection: new OpenLayers.Projection("EPSG:4326"),
+        projection: osgb,
+        displayProjection: wgs84,
         units: "m",
         numZoomLevels: 18,
         maxResolution: maxResolution,
         maxExtent: maxExtent,
-        restrictedExtent: restrictedExtent
+        restrictedExtent: restrictedExtent,
+        resolutions: [1763.889,352.778,176.389,88.194,35.278,26.458,17.639,8.819,3.528,1.764,0.882,0.441]
     };
 
     map = new OpenLayers.Map('map', options);
-    streetview = new OpenLayers.Layer.StreetView("OS StreetView (1:10000)");
+
+    streetview = new OpenLayers.Layer.WMS( 
+        "Edina OS OpenData WMS","http://opendatamap.ecs.soton.ac.uk/mymap/wms.php",
+        {}, 
+        {attribution: "Contains Ordnance Survey data. (c) Crown copyright and database right 20XX. Data provided by Digimap OpenStream, an EDINA, University of Edinburgh Service."}
+    );
 
     loadInfo();
 

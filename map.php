@@ -74,7 +74,7 @@ foreach($data as $uri => $point)
 	if($point['lat'] == '' || $point['lon'] == '')
 		continue;
 	echo "    ll['$uri'] = new OpenLayers.LonLat(".$point['lon'].", ".$point['lat'].");\n";
-	echo "    ll['$uri'].transform(wgs84, map.getProjectionObject());\n";
+	echo "    ll['$uri'].transform(wgs84, osgb);\n";
 	$opacity = 0.5;
 	if($point['source'] == 'OS')
 		$opacity = 1.0;
