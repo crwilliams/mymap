@@ -19,6 +19,18 @@ else
 	header('HTTP/1.0 404 Not Found');
 	die('Map not found.');
 }
+
+function addBase($base, $uri)
+{
+	if(preg_match('|://|', $uri))
+	{
+		return $uri;
+	}
+	else
+	{
+		return $base.$uri;
+	}
+}
 ?>
 <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
   xmlns:oo="http://purl.org/openorg/"
@@ -42,11 +54,21 @@ $res = mysql_query($q);
 while($row = mysql_fetch_assoc($res))
 {
 ?>
-  <rdf:Description rdf:about="<?php echo $base.$row['uri'] ?>">
+  <rdf:Description rdf:about="<?php echo addBase($base, $row['uri']) ?>">
     <rdfs:label><?php echo htmlentities($row['name']) ?></rdfs:label>
     <oo:mapIcon rdf:resource="<?php echo $row['icon'] ?>" />
     <geo:lat rdf:datatype="http://www.w3.org/2001/XMLSchema#float"><?php echo $row['lat'] ?></geo:lat>
     <geo:long rdf:datatype="http://www.w3.org/2001/XMLSchema#float"><?php echo $row['lon'] ?></geo:long>
+  </rdf:Description>
+<?php
+}
+$q = 'SELECT uri, wkt FROM mappolygons WHERE username = \''.$params[0].'\' AND map = \''.$params[1].'\' order by `uri`';
+$res = mysql_query($q);
+while($row = mysql_fetch_assoc($res))
+{
+?>
+  <rdf:Description rdf:about="<?php echo addBase($base, $row['uri']) ?>">
+    <dct:spatial><?php echo htmlentities($row['wkt']) ?></dct:spatial>
   </rdf:Description>
 <?php
 }

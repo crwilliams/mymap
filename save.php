@@ -26,11 +26,19 @@ foreach($items as $item)
 		continue;
 	$d = explode('|', $item);
 	$d[0] = mysql_real_escape_string($d[0]);
-	$d[1] = (float)$d[1];
-	$d[2] = (float)$d[2];
-	$d[3] = mysql_real_escape_string($d[3]);
-	$d[4] = mysql_real_escape_string($d[4]);
-	$q = 'INSERT INTO mappoints (map, username, uri, lat, lon, source, name, icon) VALUES (\''.$map.'\', \''.$username.'\', \''.$d[0].'\', '.$d[1].', '.$d[2].', \'OS\', \''.$d[3].'\', \''.$d[4].'\') ON DUPLICATE KEY UPDATE lat = '.$d[1].', lon = '.$d[2].', source = \'OS\', name = \''.$d[3].'\', icon = \''.$d[4].'\';';
+	if($d[1] == 'WKT')
+	{
+		$d[2] = mysql_real_escape_string($d[2]);
+		$q = 'INSERT INTO mappolygons (map, username, uri, wkt, source) VALUES (\''.$map.'\', \''.$username.'\', \''.$d[0].'\', \''.$d[2].'\', \'OS\') ON DUPLICATE KEY UPDATE wkt = \''.$d[2].'\', source = \'OS\';';
+	}
+	else
+	{
+		$d[1] = (float)$d[1];
+		$d[2] = (float)$d[2];
+		$d[3] = mysql_real_escape_string($d[3]);
+		$d[4] = mysql_real_escape_string($d[4]);
+		$q = 'INSERT INTO mappoints (map, username, uri, lat, lon, source, name, icon) VALUES (\''.$map.'\', \''.$username.'\', \''.$d[0].'\', '.$d[1].', '.$d[2].', \'OS\', \''.$d[3].'\', \''.$d[4].'\') ON DUPLICATE KEY UPDATE lat = '.$d[1].', lon = '.$d[2].', source = \'OS\', name = \''.$d[3].'\', icon = \''.$d[4].'\';';
+	}
 	mysql_query($q) or die(mysql_error());
 	$i++;
 }

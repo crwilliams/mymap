@@ -51,6 +51,26 @@ while($row = mysql_fetch_assoc($res))
     </Placemark>
 <?php
 }
+
+require_once('lib/geoPHP/geoPHP.inc');
+$wkt = new wkt();
+$kml = new kml();
+function convertWKTtoKML($data)
+{
+	return $kml->write($wkt->read($data));
+}
+
+$q = 'SELECT uri, wkt FROM mappolygons WHERE username = \''.$params[0].'\' AND map = \''.$params[1].'\' order by `name`';
+$res = mysql_query($q);
+while($row = mysql_fetch_assoc($res))
+{
+?>
+    <Placemark>
+      <name><?php echo htmlspecialchars($row['uri']) ?></name>
+      <?php echo $kml->write($wkt->read($row['wkt'])) ?>
+    </Placemark>
+<?php
+}
 ?>
   </Document>
 </kml>

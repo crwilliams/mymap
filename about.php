@@ -1,7 +1,7 @@
 <?
 error_reporting(0);
 include 'functions.inc.php';
-outputHeader("About this tool", "", "GENERIC", false, false);
+outputHeader("About this tool", "");
 ?>
 <p>
 This tool was created by <?= mklink('http://www.crwilliams.co.uk', 'Colin R. Williams') ?> in order to assist in the creation of open geographic data.
@@ -13,6 +13,8 @@ The problem with existing map creation tools (such as <?= mklink('http://maps.go
 This tool makes use of a number of openly licensed resources, as follows:
 <ul>
 	<li><?= mklink('http://openlayers.org/', 'OpenLayers') ?> (available under a <?= mklink('https://raw.github.com/openlayers/openlayers/master/license.txt', 'FreeBSD license') ?>)</li>
+	<li><?= mklink('http://trac.osgeo.org/proj4js/', 'proj4js') ?> (available under a <?= mklink('http://www.gnu.org/copyleft/lesser.html', 'LGPL license') ?>)</li>
+	<li><?= mklink('https://github.com/phayes/geoPHP', 'geoPHP') ?> (available under a <?= mklink('http://opensource.org/licenses/BSD-3-Clause', 'Modified BSD license') ?>)</li>
 	<li><?= mklink('http://jquery.org/', 'jQuery') ?> (available under a <?= mklink('http://github.com/jquery/jquery/blob/master/MIT-LICENSE.txt', 'MIT license') ?>)</li>
 	<li><?= mklink('http://jqueryui.com/', 'jQuery UI') ?> (available under a <?= mklink('http://github.com/jquery/jquery/blob/master/MIT-LICENSE.txt', 'MIT license') ?>)</li>
 	<li><?= mklink('http://www.famfamfam.com/lab/icons/silk/', 'famfamfam silk icons') ?> (available under the <?= mklink('http://creativecommons.org/licenses/by/3.0/', 'Creative Commons Attribution 3.0 License') ?>)</li>

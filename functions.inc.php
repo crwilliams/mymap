@@ -154,4 +154,153 @@ function mklink($url, $text="", $title="")
 	}
 	return "<a href='$url' title='$title'>".str_replace(" ", "&nbsp;", $text)."</a>";
 }
+
+function getLatLongFromPostcode($postcode)
+{
+	require_once('/home/opendatamap/mysql.inc.php');
+	$params[] = mysql_real_escape_string(str_replace(' ', '', $postcode));
+	$q = 'SELECT latitude AS lat, longitude AS lon FROM postcode WHERE code = \''.$params[0].'\'';
+	$res = mysql_query($q);
+	if($row = mysql_fetch_assoc($res))
+	{
+		return $row;
+	}
+	return null;
+}
+
+function getLatLongFromBuildingNumber($bno)
+{
+	require_once('../inc/sparqllib.php');
+	$data = sparql_get("http://sparql.data.southampton.ac.uk", "
+	SELECT ?lat ?lon WHERE {
+		<http://id.southampton.ac.uk/building/$bno> <http://www.w3.org/2003/01/geo/wgs84_pos#lat> ?lat .
+		<http://id.southampton.ac.uk/building/$bno> <http://www.w3.org/2003/01/geo/wgs84_pos#long> ?lon .
+	}
+	", '../');
+	if(count($data) == 1)
+		return $data[0];
+	else
+		return null;
+}
+
+function loadCSV($filename, $base="", $idcolname, $namecolname, $iconcolname, $latcolname, $loncolname, $pccolname, $bnocolname, $srccolname, $location, $matchcolnames = false, $includenoncsv = true)
+{
+	$colnames = null;
+	$data = array();
+	if ($filename != '' && ($handle = fopen($filename, "r")) !== FALSE) {
+		while (($row = @fgetcsv($handle, 1000, ",")) !== FALSE) {
+			if($row[0] == '*COMMENT' || $row[0] == '')
+				continue;
+			$num = count($row);
+			if($colnames == null)
+			{
+				$outcolnames[strtolower($namecolname)] = 'label';
+				$outcolnames[strtolower($iconcolname)] = 'icon';
+				$outcolnames[strtolower($latcolname )] = 'lat';
+				$outcolnames[strtolower($loncolname )] = 'lon';
+				$outcolnames[strtolower($pccolname  )] = 'pc';
+				$outcolnames[strtolower($bnocolname )] = 'bno';
+				$outcolnames[strtolower($srccolname )] = 'src';
+				for ($c=0; $c < $num; $c++) {
+					$colnames[strtolower($row[$c])] = $c;
+					$outcolnames[strtolower($row[$c])] = $row[$c];
+				}
+				if(!$matchcolnames)
+				{
+					$outcolnames[strtolower($namecolname)] = 'label';
+					$outcolnames[strtolower($iconcolname)] = 'icon';
+					$outcolnames[strtolower($latcolname )] = 'lat';
+					$outcolnames[strtolower($loncolname )] = 'lon';
+					$outcolnames[strtolower($pccolname  )] = 'pc';
+					$outcolnames[strtolower($bnocolname )] = 'bno';
+					$outcolnames[strtolower($srccolname )] = 'src';
+				}
+			}
+			else
+			{
+				@$data[$base.$row[$colnames[$idcolname]]] = array();
+				if($matchcolnames)
+				{
+					foreach($colnames as $colname => $c)
+					{
+						$data[$base.$row[$colnames[$idcolname]]][$outcolnames[$colname]] = $row[$c];
+					}
+				}
+				if(isset($colnames[$namecolname])) $data[$base.$row[$colnames[$idcolname]]][$outcolnames[strtolower($namecolname)]] = $row[$colnames[$namecolname]];
+				if(isset($colnames[$iconcolname])) $data[$base.$row[$colnames[$idcolname]]][$outcolnames[strtolower($iconcolname)]] = $row[$colnames[$iconcolname]];
+				if(isset($colnames[$latcolname ])) $data[$base.$row[$colnames[$idcolname]]][$outcolnames[strtolower($latcolname )]] = $row[$colnames[$latcolname ]];
+				if(isset($colnames[$loncolname ])) $data[$base.$row[$colnames[$idcolname]]][$outcolnames[strtolower($loncolname )]] = $row[$colnames[$loncolname ]];
+				if(isset($colnames[$pccolname  ])) $data[$base.$row[$colnames[$idcolname]]][$outcolnames[strtolower($pccolname  )]] = $row[$colnames[$pccolname  ]];
+				if(isset($colnames[$bnocolname ])) $data[$base.$row[$colnames[$idcolname]]][$outcolnames[strtolower($bnocolname )]] = $row[$colnames[$bnocolname ]];
+				if(
+					isset($data[$base.$row[$colnames[$idcolname]]][$outcolnames[strtolower($latcolname )]]) &&
+					'' != $data[$base.$row[$colnames[$idcolname]]][$outcolnames[strtolower($latcolname )]] &&
+					isset($data[$base.$row[$colnames[$idcolname]]][$outcolnames[strtolower($loncolname )]]) &&
+					'' != $data[$base.$row[$colnames[$idcolname]]][$outcolnames[strtolower($loncolname )]]
+				)
+				{
+					if(isset($colnames[$srccolname]))
+					{
+						$data[$base.$row[$colnames[$idcolname]]][$outcolnames[strtolower($srccolname  )]] = $row[$colnames[$srccolname]];
+					}
+					else
+					{
+						$data[$base.$row[$colnames[$idcolname]]][$outcolnames[strtolower($srccolname  )]] = 'CSV';
+					}
+				}
+				else if(isset($data[$base.$row[$colnames[$idcolname]]][$outcolnames[strtolower($pccolname  )]]) && '' != $data[$base.$row[$colnames[$idcolname]]][$outcolnames[strtolower($pccolname  )]])
+				{
+					$ll = getLatLongFromPostcode($data[$base.$row[$colnames[$idcolname]]][$outcolnames[strtolower($pccolname  )]]);
+					if(!is_null($ll))
+					{
+						$data[$base.$row[$colnames[$idcolname]]][$outcolnames[strtolower($latcolname )]] = $ll['lat'];
+						$data[$base.$row[$colnames[$idcolname]]][$outcolnames[strtolower($loncolname )]] = $ll['lon'];
+						$data[$base.$row[$colnames[$idcolname]]][$outcolnames[strtolower($srccolname )]] = '<em>'.$data[$base.$row[$colnames[$idcolname]]][$outcolnames[strtolower($pccolname  )]].'</em>';
+					}
+				}
+				else if(isset($data[$base.$row[$colnames[$idcolname]]][$outcolnames[strtolower($bnocolname )]]) && '' != $data[$base.$row[$colnames[$idcolname]]][$outcolnames[strtolower($bnocolname )]])
+				{
+					$ll = getLatLongFromBuildingNumber($data[$base.$row[$colnames[$idcolname]]][$outcolnames[strtolower($bnocolname )]]);
+					if(!is_null($ll))
+					{
+						$data[$base.$row[$colnames[$idcolname]]][$outcolnames[strtolower($latcolname )]] = $ll['lat'];
+						$data[$base.$row[$colnames[$idcolname]]][$outcolnames[strtolower($loncolname )]] = $ll['lon'];
+						$data[$base.$row[$colnames[$idcolname]]][$outcolnames[strtolower($srccolname )]] = '<em>B'.$data[$base.$row[$colnames[$idcolname]]][$outcolnames[strtolower($bnocolname )]].'</em>';
+					}
+				}
+				if(isset($location[$row[$colnames[$idcolname]]]))
+				{
+					$data[$base.$row[$colnames[$idcolname]]][$outcolnames[strtolower($latcolname )]] = $location[$row[$colnames[$idcolname]]][0];
+					$data[$base.$row[$colnames[$idcolname]]][$outcolnames[strtolower($loncolname )]] = $location[$row[$colnames[$idcolname]]][1];
+					$data[$base.$row[$colnames[$idcolname]]][$outcolnames[strtolower($srccolname )]] = $location[$row[$colnames[$idcolname]]][2];
+				}
+			}
+		}
+		fclose($handle);
+	}
+	
+	if($includenoncsv)
+	{
+		foreach($location as $id => $r)
+		{
+			if(!isset($data[$id]))
+			{
+				$data[$id] = array(
+					$outcolnames[strtolower($namecolname)] => $r[3],
+					$outcolnames[strtolower($iconcolname)] => $r[4],
+					$outcolnames[strtolower($latcolname )] => $r[0],
+					$outcolnames[strtolower($loncolname )] => $r[1],
+					$outcolnames[strtolower($srccolname )] => $r[2]
+				);
+			}
+		}
+	}
+
+	$cns;
+	foreach($colnames as $colname => $c)
+	{
+		$cns[$outcolnames[strtolower($colname)]] = $c;
+	}
+	return array($cns, $data);
+}
 ?>
