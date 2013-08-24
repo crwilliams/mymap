@@ -101,6 +101,7 @@ function loadInfo() {
 $iconcounts = array();
 foreach($data as $uri => $item)
 {
+	$item['label'] = str_replace('\'', '&apos;', $item['label']);
 	echo "    label['$uri'] = '".$item['label']."';\n";
 	echo "    icons['$uri'] = '".$item['icon']."';\n";
 	@$iconcounts[$item['icon']]++;
