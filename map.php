@@ -131,6 +131,11 @@ foreach($iconcounts as $k => $v)
 							style='z-index:1000; float:left; margin-right:5px' />New Point<br />
 						<span class='small'>Drag to location to add new point.</span>
 					</li>
+					<li id='_newpolygon_'>
+						<img class='draggable' src='http://opendatamap.ecs.soton.ac.uk/img/icon/Media/blank.png'
+							style='z-index:1000; float:left; margin-right:5px' />New Polygon<br />
+						<span class='small'>Drag to location to add new polygon.</span>
+					</li>
 <?php
  						pointsList($data)
 ?>
@@ -167,6 +172,16 @@ foreach($iconcounts as $k => $v)
 								</div>
 							</div>
 						</td>
+					</tr>
+				</table>
+			</form>
+		</div>
+		<div id="polygondialog-modal" style="display:none" title="Add Location">
+			<form>
+				<table style='margin-left:auto; margin-right:auto;'>
+					<tr>
+						<td><label for='polygon-uri'>ID:</label></td>
+						<td><input id='polygon-uri' name='polygon-uri' /></td>
 					</tr>
 				</table>
 			</form>

@@ -192,6 +192,58 @@ function newDialog(pixel) {
     });
 }
 
+function newPolygonDialog(pixel) {
+    "use strict";
+    $('#polygon-uri')[0].value = '';
+    $('#polygondialog-modal').dialog({
+        width: '40em',
+        modal: true,
+        buttons: {
+            Ok: function () {
+                var uri = $('#polygon-uri')[0].value;
+                if (uri === '') {
+                    alert('ID not set.');
+                } else if (uri !== uri.toLowerCase().replace(/\W/g, '-')) {
+                    alert('ID does not meet requirements.  Updating ID...');
+                    $('#uri')[0].value = uri.toLowerCase().replace(/\W/g, '-');
+                } else if (p[uri] !== undefined) {
+                    alert('Point with this ID already exists.  Please choose a new ID.');
+                } else {
+                    $(this).dialog("close");
+                    $("#" + uri + " .draggable").draggable({
+                        cursorAt: {cursor: "crosshair", top: 39, left: 17},
+                        helper: function (event) {
+                            lastevent = event;
+                            return $("<img src='" + event.currentTarget.src + "' />");
+                        },
+                        revert: "invalid"
+                    });
+                    newPolygon(uri, pixel);
+                }
+            }
+        }
+    });
+}
+
+function newPolygon(uri, pixel) {
+    "use strict";
+    var linearring,
+        points = [],
+        polygon,
+        vector;
+    map.getLonLatFromViewPortPx(pixel);
+    points.push(new OpenLayers.Geometry.Point(map.getLonLatFromViewPortPx(pixel.add(10, 10)).lon, map.getLonLatFromViewPortPx(pixel.add(10, 10)).lat));
+    points.push(new OpenLayers.Geometry.Point(map.getLonLatFromViewPortPx(pixel.add(10, -10)).lon, map.getLonLatFromViewPortPx(pixel.add(10, -10)).lat));
+    points.push(new OpenLayers.Geometry.Point(map.getLonLatFromViewPortPx(pixel.add(-10, -10)).lon, map.getLonLatFromViewPortPx(pixel.add(-10, -10)).lat));
+    points.push(new OpenLayers.Geometry.Point(map.getLonLatFromViewPortPx(pixel.add(-10, 10)).lon, map.getLonLatFromViewPortPx(pixel.add(-10, 10)).lat));
+    linearring = new OpenLayers.Geometry.LinearRing(points);
+    polygon = new OpenLayers.Geometry.Polygon([linearring]);
+    vector = new OpenLayers.Feature.Vector(polygon);
+    vector.fid = uri;
+    vectors.addFeatures([vector]);
+    changedPolygons[uri] = wkt.write(new OpenLayers.Feature.Vector(vector.geometry.clone().transform(osgb, wgs84)));
+}
+
 function report(event) {
     if (event.type == 'afterfeaturemodified') {
         changedPolygons[event.feature.fid] = wkt.write(new OpenLayers.Feature.Vector(event.feature.geometry.clone().transform(osgb, wgs84)));
@@ -252,6 +304,8 @@ function init() {
             lastevent = event;
             if (id === '_new_') {
                 newDialog(pixel);
+            } else if (id === '_newpolygon_') {
+                newPolygonDialog(pixel);
             } else {
                 drop(id, pixel, true);
             }
