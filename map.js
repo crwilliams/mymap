@@ -197,6 +197,25 @@ function report(event) {
     }
 }
 
+function setBounds() {
+    "use strict";
+    var bounds;
+    if (!map.getCenter()) {
+        if (markers.features.length === 0 && vectors.features.length === 0) {
+            bounds = new OpenLayers.Bounds(-6.379880, 49.871159, 1.768960, 55.811741);
+            bounds.transform(wgs84, map.getProjectionObject());
+        } else if(markers.features.length === 0) {
+            bounds = vectors.getDataExtent();
+        } else if(vectors.features.length === 0) {
+            bounds = markers.getDataExtent();
+        } else {
+            bounds = markers.getDataExtent().extend(vectors.getDataExtent());
+        }
+console.log(bounds);
+        map.zoomToExtent(bounds);
+    }
+}
+
 function init() {
     "use strict";
     var maxExtent = new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508),
@@ -273,18 +292,6 @@ function init() {
     map.addLayers([streetview, markers, vectors]);
 
     markers.addFeatures(features);
-    if (!map.getCenter()) {
-        if (markers.features.length === 0) {
-            bounds = new OpenLayers.Bounds(-6.379880, 49.871159, 1.768960, 55.811741);
-            bounds.transform(wgs84, map.getProjectionObject());
-        } else {
-            bounds = markers.getDataExtent();
-        }
-        map.zoomToExtent(bounds);
-        if (map.getZoom() < 6) {
-            map.zoomTo(6);
-        }
-    }
 
     drag = new OpenLayers.Control.DragFeature(markers, {
         onComplete : function (feature, pixel) {
