@@ -112,12 +112,16 @@ foreach($iconcounts as $k => $v)
 	</head>
 	<body onload="init()">
 		<div id='listheader'>
-			<ul id='links'>
-				<li><a href='../../<?= $_REQUEST['u'] ?>'>Back to map list <img src='../../icons/map.png' /></a></li>
-				<li><a href='../<?= $_REQUEST['m'] ?>.rdf'>View RDF <img src='../../icons/page_white_code.png' /></a></li>
-				<li><a href='../<?= $_REQUEST['m'] ?>.kml'>View KML <img src='../../icons/page_white_code.png' /></a></li>
-				<li id='save_link' style='display: none'><a href='#' onclick='save();'>Save <img src='../../icons/disk.png' /></a></li>
-			</ul>
+			<form>
+				<ul id='links'>
+					<li><input type='radio' name='mode' id='mode-points' onclick='enableDragPoints();'><label for='mode-points'>Drag marker icons</label></li>
+					<li><input type='radio' name='mode' id='mode-polygons' onclick='enableDragPolygons();'><label for='mode-polygons'>Drag outline corners</label></li>
+					<li><a href='../../<?= $_REQUEST['u'] ?>'>Back to map list <img src='../../icons/map.png' /></a></li>
+					<li><a href='../<?= $_REQUEST['m'] ?>.rdf'>View RDF <img src='../../icons/page_white_code.png' /></a></li>
+					<li><a href='../<?= $_REQUEST['m'] ?>.kml'>View KML <img src='../../icons/page_white_code.png' /></a></li>
+					<li id='save_link' style='display: none'><a href='#' onclick='save();'>Save <img src='../../icons/disk.png' /></a></li>
+				</ul>
+			</form>
 		</div>
 		<div id="controls">
 			<div id='list'>

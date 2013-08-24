@@ -18,7 +18,9 @@ var map,
     iconCounts = [],
     lastevent,
     prevname = '',
-    wkt = new OpenLayers.Format.WKT();
+    wkt = new OpenLayers.Format.WKT(),
+    modify,
+    drag;
 
 // increase reload attemptscurl
 OpenLayers.IMAGE_RELOAD_ATTEMPTS = 3;
@@ -223,7 +225,6 @@ function init() {
         maxResolution = 156543.0339,
         options,
         streetview,
-        drag,
         bounds;
 
     $(".draggable").draggable({
@@ -301,5 +302,21 @@ function init() {
         }
     });
     map.addControl(drag);
+
+    modify = new OpenLayers.Control.ModifyFeature(vectors);
+    map.addControl(modify);
+
+    modify.mode = OpenLayers.Control.ModifyFeature.RESHAPE;
+}
+
+function enableDragPoints() {
+    "use strict";
+    modify.deactivate();
     drag.activate();
+}
+
+function enableDragPolygons() {
+    "use strict";
+    drag.deactivate();
+    modify.activate();
 }
