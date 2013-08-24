@@ -71,25 +71,25 @@ foreach($data as $uri => $point)
 {
 	if($point['lat'] == '' || $point['lon'] == '')
 		continue;
-	echo "ll['$uri'] = new OpenLayers.LonLat(".$point['lon'].", ".$point['lat'].");\n";
-	echo "ll['$uri'].transform(wgs84, map.getProjectionObject());\n";
+	echo "    ll['$uri'] = new OpenLayers.LonLat(".$point['lon'].", ".$point['lat'].");\n";
+	echo "    ll['$uri'].transform(wgs84, map.getProjectionObject());\n";
 	$opacity = 0.5;
 	if($point['source'] == 'OS')
 		$opacity = 1.0;
-	echo "p['$uri'] = new OpenLayers.Feature.Vector(\n";
-	echo "\tnew OpenLayers.Geometry.Point(ll['$uri'].lon, ll['$uri'].lat),\n";
-	echo "\t'$uri',\n"
-	echo "\t{\n";
-	echo "\t\texternalGraphic: icons['$uri'],\n";
-	echo "\t\tgraphicWidth: 32,\n";
-	echo "\t\tgraphicHeight: 37,\n";
-	echo "\t\tgraphicXOffset: -16,\n";
-	echo "\t\tgraphicYOffset: -37,\n";
-	echo "\t\tgraphicTitle: label['$uri'],\n";
-	echo "\t\tgraphicOpacity : $opacity\n";
-	echo "\t});\n";
-	echo "p['$uri'].fid = '$uri';\n";
-	echo "features.push(p['$uri']);\n";
+	echo "    p['$uri'] = new OpenLayers.Feature.Vector(\n";
+	echo "        new OpenLayers.Geometry.Point(ll['$uri'].lon, ll['$uri'].lat),\n";
+	echo "        '$uri',\n";
+	echo "        {\n";
+	echo "            externalGraphic: icons['$uri'],\n";
+	echo "            graphicWidth: 32,\n";
+	echo "            graphicHeight: 37,\n";
+	echo "            graphicXOffset: -16,\n";
+	echo "            graphicYOffset: -37,\n";
+	echo "            graphicTitle: label['$uri'],\n";
+	echo "            graphicOpacity : $opacity\n";
+	echo "    });\n";
+	echo "    p['$uri'].fid = '$uri';\n";
+	echo "    features.push(p['$uri']);\n";
 }
 ?>
 		</script>
@@ -99,13 +99,13 @@ foreach($data as $uri => $point)
 $iconcounts = array();
 foreach($data as $uri => $item)
 {
-	echo "label['$uri'] = '".$item['label']."';\n";
-	echo "icons['$uri'] = '".$item['icon']."';\n";
+	echo "    label['$uri'] = '".$item['label']."';\n";
+	echo "    icons['$uri'] = '".$item['icon']."';\n";
 	@$iconcounts[$item['icon']]++;
 }
 foreach($iconcounts as $k => $v)
 {
-	echo "iconCounts['$k'] = $v;\n";
+	echo "    iconCounts['$k'] = $v;\n";
 }
 ?>
 		</script>
