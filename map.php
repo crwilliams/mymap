@@ -65,7 +65,8 @@ li#tab-<?php echo $name ?> {
 var param_username = "<?= $_REQUEST['u'] ?>";
 var param_map = "<?= $_REQUEST['m'] ?>";
 
-var features = new Array();
+function loadFeatures(features) {
+    var ll = [];
 <?php
 foreach($data as $uri => $point)
 {
@@ -95,6 +96,9 @@ foreach($data as $uri => $point)
 		</script>
 		<script src="../../map.js"></script>
 		<script type="text/javascript">
+}
+
+function loadInfo() {
 <?php
 $iconcounts = array();
 foreach($data as $uri => $item)
@@ -108,6 +112,7 @@ foreach($iconcounts as $k => $v)
 	echo "    iconCounts['$k'] = $v;\n";
 }
 ?>
+}
 		</script>
 	</head>
 	<body onload="init()">

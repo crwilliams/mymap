@@ -8,7 +8,6 @@ var map,
     markers,
     p = [],
     changed = [],
-    ll = [],
     changedPolygons = [],
     wgs84 = new OpenLayers.Projection("EPSG:4326"),
     osgb = new OpenLayers.Projection("EPSG:27700"),
@@ -325,6 +324,12 @@ function init() {
 
     map = new OpenLayers.Map('map', options);
     streetview = new OpenLayers.Layer.StreetView("OS StreetView (1:10000)");
+
+    loadInfo();
+
+    var features = [];
+    loadFeatures(features);
+
     markers = new OpenLayers.Layer.Vector("Editable Markers");
 
     var renderer = OpenLayers.Layer.Vector.prototype.renderers;
