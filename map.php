@@ -60,6 +60,7 @@ li#tab-<?php echo $name ?> {
 		<script src="../../lib/OpenLayers-2.11/OpenLayers.js"></script>
 		<script src="../../lib/jquery-1.6.2.min.js"></script>
 		<script src="../../lib/jquery-ui-1.8.16.min.js"></script>
+		<script src="../../map.js"></script>
 		<script src="../../lib/OpenLayers-2.11/lib/OpenLayers/Format/WKT.js"></script>
 		<script type="text/javascript">
 var param_username = "<?= $_REQUEST['u'] ?>";
@@ -93,9 +94,6 @@ foreach($data as $uri => $point)
 	echo "    features.push(p['$uri']);\n";
 }
 ?>
-		</script>
-		<script src="../../map.js"></script>
-		<script type="text/javascript">
 }
 
 function loadInfo() {
