@@ -56,6 +56,7 @@ li#tab-<?php echo $name ?> {
 ?>
 		</style>
 
+		<script src="../../lib/proj4js/proj4js.js"></script>
 		<script src="../../lib/OpenLayers-2.11/OpenLayers.js"></script>
 		<script src="../../lib/jquery-1.6.2.min.js"></script>
 		<script src="../../lib/jquery-ui-1.8.16.min.js"></script>
