@@ -89,6 +89,10 @@ function save() {
         str += q + '|' + llc.y + '|' + llc.x + '|' + label[q] + '|' + icons[q] + '||';
         i += 1;
     }
+    for (q in changedPolygons) {
+        str += q + '|WKT|' + changedPolygons[q] + '||';
+        i += 1;
+    }
     OpenLayers.Request.POST({
         url : "http://opendatamap.ecs.soton.ac.uk/mymap/save.php?username=" + param_username + "&map=" + param_map,
         data : str,
@@ -100,6 +104,7 @@ function save() {
             }
             markers.redraw();
             changed = [];
+            changedPolygons = [];
             document.getElementById('save_link').style.display = 'none';
         },
         failure : function (response) {
